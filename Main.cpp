@@ -4,6 +4,7 @@
 #include<vector>
 #include<string>
 
+bool running = false;
 
 class Task {
 private:
@@ -62,17 +63,21 @@ private:
 
 public:
     void addTask( Task& new_task) {
-        std::string title;
+        std::string title, description;
         std::cout << "Enter your task title: ";
         std::getline(std::cin, title);
-
         new_task.set_title(title);
+
+        std::cout << "Enter your task description: ";
+        std::getline(std::cin, description);
+        new_task.setDescription(description);
+
 
         tasks.push_back(new_task);
     };
 
     void removeTask(std::string& task_title) {
-        for (auto it = tasks.begin(); it != tasks.end(); ++it) {
+        for (auto it = tasks.begin(); it != tasks.end(); it++) {
             if (it->getTitle() == task_title) {
                 tasks.erase(it);
                 break;
@@ -99,8 +104,9 @@ public:
         }
     };
 
-    void displayAllTasks() const {
+    void displayAllTasks(std::string &title) {
         for(auto i : tasks) {
+            if(i.getTitle() == title)
             std::cout << "Task: " << i.getTitle() << "\n";
             std::cout << "      "<< i.getDescription() << " \n";
         }
@@ -201,7 +207,10 @@ public:
             }
 
             case 4: {
-                Todo.displayAllTasks();
+                std::string title;
+                std::cout << "Enter task title";
+                std::cin >> title;
+                Todo.displayAllTasks(title);
                 break;
             }
 
@@ -222,6 +231,9 @@ public:
 
             case 7: {
                 std::cout << "exiting program...";
+                bool* rptr =  &running;
+                *rptr = false;
+
                 break;
 
             }
@@ -232,14 +244,13 @@ public:
     void displayWelcomeMessage() {
         std::cout << " Hello! Welcome to the to do list project.";
     };
+
     void handleFileOperations();
 };
 
 int main() {
 
     Primary program;
-
-    bool running = false;
 
     do {
         running = true;
